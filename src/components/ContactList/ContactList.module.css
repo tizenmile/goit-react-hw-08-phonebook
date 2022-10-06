@@ -1,0 +1,19 @@
+.list {
+  /* display: flex; */
+  /* flex-direction: row; */
+  margin-right: 100px;
+}
+.item {
+  display: flex;
+  flex-direction: row;
+  margin-right: 10px;
+  align-items: center;
+}
+
+.btn {
+  margin-left: 10px;
+}
+
+.find {
+  margin-left: 20px;
+}
