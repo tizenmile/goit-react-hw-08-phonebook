@@ -29,7 +29,6 @@ class App extends Component {
   }
   handleDelete = (event) => {
     this.setState({ contacts: this.state.contacts.filter(data => data.id !== event.target.getAttribute("data-id")) })
-    console.log(event.target.getAttribute("data-id"));
   }
 
   render() {

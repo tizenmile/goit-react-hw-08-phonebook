@@ -1,4 +1,5 @@
 import css from './ContactList.module.css';
+import PropTypes from 'prop-types';
 export const ContactList = ({ contacts, filter, handleDelete }) => {
     return (
         <>
@@ -9,3 +10,9 @@ export const ContactList = ({ contacts, filter, handleDelete }) => {
 
     )
 }
+
+ContactList.propTypes = {
+    contacts: PropTypes.array,
+    filter: PropTypes.string,
+    handleDelete: PropTypes.func,
+};

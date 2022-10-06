@@ -1,5 +1,5 @@
 import css from '../ContactList/ContactList.module.css';
-
+import PropTypes from 'prop-types';
 export const Filter = ({ contacts, filter, handleDelete, handleChange }) => {
     return (
         <>
@@ -22,3 +22,9 @@ export const Filter = ({ contacts, filter, handleDelete, handleChange }) => {
 
     )
 }
+Filter.propTypes = {
+    contacts: PropTypes.array,
+    filter: PropTypes.string,
+    handleDelete: PropTypes.func,
+    handleChange: PropTypes.func,
+};

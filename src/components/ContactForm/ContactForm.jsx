@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import css from "./ContactForm.module.css"
 
-export const ContactForm = ({ handleSubmit, handleChange }) => {
+export const ContactForm = ({ handleSubmit }) => {
     return (
         <div>
             <form onSubmit={(event) => handleSubmit(event)} className={css.form}>
@@ -25,13 +26,15 @@ export const ContactForm = ({ handleSubmit, handleChange }) => {
                         />
                     </label>
                 </div>
-
                 <div>
                     <button type="submit" className={css.btn}>Add contact</button>
                 </div>
-
             </form>
-            
         </div>
     )
 }
+
+
+ContactForm.propTypes = {
+    handleSubmit: PropTypes.func
+};
