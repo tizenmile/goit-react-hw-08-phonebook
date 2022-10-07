@@ -12,23 +12,32 @@ class App extends Component {
     filter: '',
   }
 
-  handleSubmit = (event) => {
+  componentDidMount() {
+    if (localStorage.getItem('localContacts')) {
+      const storedContacts = JSON.parse(localStorage.getItem('localContacts'))
+      this.setState({ contacts: storedContacts })
+    }
+  }
+
+  handleSubmit = async (event) => {
     event.preventDefault();
+
     const contact = {
       name: event.target.name.value,
       number: event.target.number.value,
       id: nanoid()
     }
-
     if (this.state.contacts.find(element => element.name === event.target.name.value)) return alert(`${event.target.name.value} is already in contacts.`)
-    this.setState({ contacts: [...this.state.contacts, contact] })
+    await this.setState({ contacts: [...this.state.contacts, contact] })
+    localStorage.setItem('localContacts', JSON.stringify(this.state.contacts))
   }
 
   handleChange = (event) => {
     this.setState({ filter: event.target.value })
   }
-  handleDelete = (event) => {
-    this.setState({ contacts: this.state.contacts.filter(data => data.id !== event.target.getAttribute("data-id")) })
+  handleDelete = async (event) => {
+    await this.setState({ contacts: this.state.contacts.filter(data => data.id !== event.target.getAttribute("data-id")) })
+    localStorage.setItem('localContacts', JSON.stringify(this.state.contacts))
   }
 
   render() {
