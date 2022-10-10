@@ -1,57 +1,54 @@
 import { ContactForm } from "./ContactForm/ContactForm"
 import { ContactList } from "./ContactList/ContactList"
 import { Filter } from './Filter/Filter'
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { nanoid } from 'nanoid'
-// model.id = nanoid() //=> "V1StGXR8_Z5jdHi6B-myT"
 
+const getStorageData = (localContacts, defaultValue) => {
+  const savedItem = localStorage.getItem(localContacts);
+  const parsedItem = JSON.parse(savedItem);
+  return parsedItem || defaultValue;
+}
 
-class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  }
+export const App = () => {
+  const [contacts, setContacts] = useState(() => {
+    return getStorageData('localContacts', []);
+  });
+  const [filter, setfilter] = useState('')
 
-  componentDidMount() {
-    if (localStorage.getItem('localContacts')) {
-      const storedContacts = JSON.parse(localStorage.getItem('localContacts'))
-      this.setState({ contacts: storedContacts })
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem('localContacts', JSON.stringify(contacts))
+  }, [contacts]);
 
-  handleSubmit = async (event) => {
+  console.log(contacts);
+  const handleSubmit = (event) => {
     event.preventDefault();
-
     const contact = {
       name: event.target.name.value,
       number: event.target.number.value,
       id: nanoid()
     }
-    if (this.state.contacts.find(element => element.name === event.target.name.value)) return alert(`${event.target.name.value} is already in contacts.`)
-    await this.setState({ contacts: [...this.state.contacts, contact] })
-    localStorage.setItem('localContacts', JSON.stringify(this.state.contacts))
+    if (contacts.find(element => element.name === event.target.name.value)) return alert(`${event.target.name.value} is already in contacts.`)
+    setContacts([...contacts, contact])
+
   }
 
-  handleChange = (event) => {
-    this.setState({ filter: event.target.value })
-  }
-  handleDelete = async (event) => {
-    await this.setState({ contacts: this.state.contacts.filter(data => data.id !== event.target.getAttribute("data-id")) })
-    localStorage.setItem('localContacts', JSON.stringify(this.state.contacts))
+  const handleChange = (event) => {
+    setfilter(event.target.value)
   }
 
-  render() {
-    return (
-      <div>
-        <h1>Phonebook</h1>
-        <ContactForm handleSubmit={this.handleSubmit} />
-
-        <h2> Contacts </h2>
-        <Filter contacts={this.state.contacts} filter={this.state.filter} handleDelete={this.handleDelete} handleChange={this.handleChange} />
-        <ContactList contacts={this.state.contacts} filter={this.state.filter} handleDelete={this.handleDelete} />
-      </div>
-    )
+  const handleDelete = (event) => {
+    setContacts(contacts.filter(data => data.id !== event.target.getAttribute("data-id")))
   }
+
+  return (
+    <div>
+      <h1>Phonebook</h1>
+      <ContactForm handleSubmit={handleSubmit} />
+
+      <h2> Contacts </h2>
+      <Filter contacts={contacts} filter={filter} handleDelete={handleDelete} handleChange={handleChange} />
+      <ContactList contacts={contacts} filter={filter} handleDelete={handleDelete} />
+    </div>
+  )
 }
-
-export { App }
