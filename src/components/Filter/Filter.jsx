@@ -1,6 +1,10 @@
 import css from '../ContactList/ContactList.module.css';
 import PropTypes from 'prop-types';
-export const Filter = ({ contacts, filter, handleDelete, handleChange }) => {
+import { useSelector } from "react-redux";
+
+export const Filter = ({ handleDelete, handleChange }) => {
+    const filter = useSelector(state => state.filter);
+    const contacts = useSelector(state => state.contacts);
     return (
         <>
             <label> Find contacts by name

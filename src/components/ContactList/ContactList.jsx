@@ -1,6 +1,10 @@
 import css from './ContactList.module.css';
 import PropTypes from 'prop-types';
-export const ContactList = ({ contacts, filter, handleDelete }) => {
+import { useSelector } from "react-redux";
+export const ContactList = ({ handleDelete }) => {
+    const contacts = useSelector(state => state.contacts);
+    const filter = useSelector(state => state.filter);
+    if (contacts.length === 0) return
     return (
         <>
             {filter ? false : <ul className={css.list}>
