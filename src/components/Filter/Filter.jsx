@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export const Filter = ({ handleDelete, handleChange }) => {
     const filter = useSelector(state => state.filter);
-    const contacts = useSelector(state => state.contacts);
+    const contacts = useSelector(state => state.contacts.items);
     return (
         <>
             <label> Find contacts by name
