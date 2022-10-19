@@ -70,11 +70,14 @@ export const App = () => {
   return (
     <div>
       <Routes>
+      
         <Route path="/" element={Object.keys(user).length === 0 || user === undefined || user === null ? <Navigate to="/login" /> : <Navigate to="/contacts" />} />
         <Route path="/login" element={!isLogin ? <Login /> : <Navigate to="/contacts" />} />
         <Route path="/register" element={!isLogin ? <Register /> : <Navigate to="/contacts" />} />
         <Route path="/contacts" element={!isLogin ? <Navigate to="/login" /> : <ContactForm handleSubmit={handleSubmit} handleEdit={handleEdit} handleDelete={handleDelete} handleChange={handleChange} />
         } />
+        <Route path="*" element={<Navigate to="/" />}
+    /> 
       </Routes>
       {<Backdrop open={isLoading}
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
