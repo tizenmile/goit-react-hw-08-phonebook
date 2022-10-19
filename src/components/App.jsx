@@ -1,17 +1,33 @@
 import { ContactForm } from "./ContactForm/ContactForm"
-import { ContactList } from "./ContactList/ContactList"
-import { Filter } from './Filter/Filter'
 import { useDispatch, useSelector } from "react-redux";
 import { setFilter } from "redux/filterSlice";
-import { fetchContacts, addContact, deleteContact } from "redux/operations";
+import { fetchContacts, addContact, deleteContact, editContact, checkLocalStorage } from "redux/operations";
 import { useEffect } from "react";
+// import css from './App.module.css'
+import { Login, Register } from "./Auth/Auth";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Backdrop, CircularProgress } from "@mui/material";
+import axios from "axios";
 export const App = () => {
   const dispatch = useDispatch();
+  const isLogin = useSelector(state => state.contacts.isLogin);
   const isLoading = useSelector(state => state.contacts.isLoading);
   const contacts = useSelector(state => state.contacts.items);
+  const user = useSelector(state => state.contacts.user);
+
   useEffect(() => {
-    dispatch(fetchContacts())
-  }, [dispatch])
+    axios.defaults.headers.common['Authorization'] = user.token
+    isLogin && dispatch(fetchContacts())
+  }, [dispatch, isLogin, user])
+
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      axios.defaults.headers.common['Authorization'] = user.token
+      dispatch(checkLocalStorage())
+    }
+  }, [dispatch, user.token]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,21 +48,39 @@ export const App = () => {
     dispatch(setFilter(event.target.value))
   }
 
-  const handleDelete = async (event) => {
-    await dispatch(deleteContact(event.target.getAttribute("data-id")));
+  const handleDelete = async (id) => {
+    const contactId = {
+      id: id,
+    }
+    await dispatch(deleteContact(contactId));
     dispatch(fetchContacts())
+  }
+  const handleEdit = async (event, id, setOpen) => {
+    event.preventDefault()
+    const contact = {
+      id: id,
+      name: event.target.form.name.value,
+      number: event.target.form.phone.value
+    }
+    await dispatch(editContact(contact))
+    dispatch(fetchContacts())
+    setOpen(false)
   }
 
   return (
     <div>
-      <h1>Phonebook</h1>
-      <ContactForm handleSubmit={handleSubmit} />
-
-      <h2> Contacts </h2>
-      <Filter handleDelete={handleDelete} handleChange={handleChange} />
-      {isLoading && <div><b>Request in progress...</b></div>}
-      {<ContactList handleDelete={handleDelete} />}
-
+      <Routes>
+        <Route path="/" element={Object.keys(user).length === 0 || user === undefined || user === null ? <Navigate to="/login" /> : <Navigate to="/contacts" />} />
+        <Route path="/login" element={!isLogin ? <Login /> : <Navigate to="/contacts" />} />
+        <Route path="/register" element={!isLogin ? <Register /> : <Navigate to="/contacts" />} />
+        <Route path="/contacts" element={!isLogin ? <Navigate to="/login" /> : <ContactForm handleSubmit={handleSubmit} handleEdit={handleEdit} handleDelete={handleDelete} handleChange={handleChange} />
+        } />
+      </Routes>
+      {<Backdrop open={isLoading}
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>}
     </div>
   )
 }
