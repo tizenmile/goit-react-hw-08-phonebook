@@ -8,6 +8,7 @@ export const fetchContacts = createAsyncThunk("contacts/fetchAll", async (_, thu
         // console.log(response.data);
         return response.data;
     } catch (e) {
+        localStorage.clear()
         return thunkAPI.rejectWithValue(e.message);
     }
 });
