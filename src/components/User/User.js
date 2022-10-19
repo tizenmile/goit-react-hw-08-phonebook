@@ -15,7 +15,6 @@ export const User = () => {
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "flex-end", flexDirection: "column" }}>
             <p>Hello, {user.user.name}!</p>
             <Link to="/login" style={{textDecoration: "none", marginRight: 10}}>
-                {/* <button onClick={userLogout}>Logout</button> */}
                 <Button onClick={userLogout} variant="outlined" color="error">Logout</Button>
             </Link>
 

@@ -3,18 +3,27 @@ import { Button } from '@mui/material';
 import { login, register } from 'redux/operations';
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
-
+import { useState } from 'react';
 
 export const Login = () => {
     const dispatch = useDispatch();
+    const [loginError, setLoginError] = useState(false)
     const handleLogin = (e) => {
         e.preventDefault()
         const loginProps = {
             email: e.target.form.email.value,
             password: e.target.form.password.value
         }
-        dispatch(login(loginProps))
+        if (e.target.form.email.value === "" || e.target.form.password.value === "") {
+            setLoginError(true)
+
+        } else {
+            setLoginError(false)
+            dispatch(login(loginProps))
+        }
+
     }
+
     return (
         <div>
             <div className={css.loginbox}>
@@ -33,10 +42,9 @@ export const Login = () => {
                         <Link to="/register" style={{ textDecoration: "none" }}>
                             <Button variant="contained">Register</Button>
                         </Link>
-
                     </div>
-                    
                 </form>
+                <div><p>{loginError ? 'Please type login/password' : false}</p></div>
             </div>
         </div>
     )
