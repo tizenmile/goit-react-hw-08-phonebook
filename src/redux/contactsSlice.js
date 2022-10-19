@@ -79,7 +79,7 @@ const contactSlice = createSlice({
       state.error = null;
     },
     [login.rejected](state, action) {
-      state.isLogin = true;
+      state.isLogin = false;
       state.isLoading = false;
       state.error = action.payload;
     },

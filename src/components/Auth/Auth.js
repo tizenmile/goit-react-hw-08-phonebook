@@ -5,8 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
+
+
 export const Login = () => {
     const dispatch = useDispatch();
+    const error = useSelector(state => state.contacts.error);
     const [loginError, setLoginError] = useState(false)
     const handleLogin = (e) => {
         e.preventDefault()
@@ -44,7 +47,7 @@ export const Login = () => {
                         </Link>
                     </div>
                 </form>
-                <div><p>{loginError ? 'Please type login/password' : false}</p></div>
+                <div><p>{loginError ? 'Please type login/password' : error ? "Verify your login/password" : false}</p></div>
             </div>
         </div>
     )
